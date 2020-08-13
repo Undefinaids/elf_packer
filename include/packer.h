@@ -12,13 +12,12 @@
 typedef struct  elf_file_s {
   void          *file;
   Elf64_Ehdr    *ehdr;
+  Elf64_Phdr    *phdr;
+  Elf64_Shdr    *shdr;
+  uint8_t       *section_content;
 }               elf_file_t;
 
 
-// union elf64_file elf32_file ?
-
 // ONLINE MAN: http://manpagesfr.free.fr/man/man5/elf.5.html
-
-//Objectif -> Rajouter une section vide
 
 #endif //ELF_PACKER_INCLUDE_PACKER_H_
