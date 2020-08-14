@@ -7,7 +7,7 @@
 int dump(elf_file_t *efile, const char *name) {
   int fd;
   ssize_t wchar = 0;
-  static const char	c = 0;
+  const char c = 0;
 
   if ((fd = open(name, O_CREAT | O_RDWR, 0775)) == -1)
     return (-1);
