@@ -9,6 +9,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <unistd.h>
 
 typedef struct  elf_file_s {
   void          *file;
@@ -19,6 +23,9 @@ typedef struct  elf_file_s {
 }               elf_file_t;
 
 elf_file_t *extract_and_copy_headers(elf_file_t *efile);
+void *my_memcpy(void *dest, const void *src, size_t n);
+Elf64_Shdr *add_new_section(elf_file_t *efile);
+int dump(elf_file_t *efile, const char *name);
 
 // ONLINE MAN: http://manpagesfr.free.fr/man/man5/elf.5.html
 

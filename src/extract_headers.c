@@ -4,13 +4,6 @@
 
 #include "packer.h"
 
-static void *my_memcpy(void *dest, const void *src, size_t n) {
-  for (size_t i = 0; i < n; ++i) {
-    ((uint8_t *)dest)[i] = ((uint8_t *)src)[i];
-  }
-  return (dest);
-}
-
 static Elf64_Ehdr *ex_cp_ehdr(void *file) {
   Elf64_Ehdr *ehdr;
 
@@ -45,12 +38,16 @@ static Elf64_Shdr *ex_cp_shdr(void *file) {
 static uint8_t **ex_cp_section_content(void *file, Elf64_Ehdr *ehdr, Elf64_Shdr *shdr) {
   uint8_t **section_content;
 
-  if ((section_content = malloc(sizeof(uint8_t *) * ehdr->e_shnum)) == NULL)
+  if ((section_content = calloc(sizeof(uint8_t *), ehdr->e_shnum)) == NULL)
     return (NULL);
   for (int i = 0; i < ehdr->e_shnum; ++i) {
-    if ((section_content[i] = malloc(sizeof(uint8_t) * shdr[i].sh_size)) == NULL)
-      return (NULL);
-    my_memcpy(section_content[i], ((uint8_t *) file) + shdr[i].sh_offset, shdr[i].sh_size);
+    if (shdr[i].sh_type != SHT_NOBITS) {
+      if ((section_content[i] = malloc(sizeof(uint8_t) * shdr[i].sh_size)) == NULL)
+	    return (NULL);
+      my_memcpy(section_content[i], (uint8_t *) file + shdr[i].sh_offset, shdr[i].sh_size);
+    }
+    else
+      section_content[i] = 0;
   }
   return (section_content);
 }

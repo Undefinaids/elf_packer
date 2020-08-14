@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <stdlib.h>
+
 #include "packer.h"
 
 void *retrieve_elf_file(const char *name) {
@@ -21,6 +17,8 @@ void *retrieve_elf_file(const char *name) {
   if (!(ehdr->e_ident[EI_MAG0] == ELFMAG0 && ehdr->e_ident[EI_MAG1] == ELFMAG1
   && ehdr->e_ident[EI_MAG2] == ELFMAG2 && ehdr->e_ident[EI_MAG3] == ELFMAG3)
   || ehdr->e_ident[EI_CLASS] != ELFCLASS64)
+    return (NULL);
+  if (s.st_size != ehdr->e_shoff + ehdr->e_shentsize * ehdr->e_shnum)
     return (NULL);
   return ((void *) ehdr);
 }
@@ -43,5 +41,7 @@ int main(int ac, char **av) {
 
   efile->file = retrieve_elf_file("test");
   extract_and_copy_headers(efile);
-  return 0;
+
+  dump(efile, "testpacked");
+  return (0);
 }

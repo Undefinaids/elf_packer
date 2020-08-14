@@ -7,4 +7,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 
 add_executable(elf_packer
         src/main.c
-        src/extract_headers.c)
+        src/extract_headers.c
+        src/utils.c
+        src/section.c
+        src/dump.c)
