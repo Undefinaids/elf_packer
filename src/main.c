@@ -2,7 +2,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/mman.h>
-
+#include <stdlib.h>
 #include "packer.h"
 
 void *retrieve_elf_file(const char *name) {
@@ -25,37 +25,23 @@ void *retrieve_elf_file(const char *name) {
   return ((void *) ehdr);
 }
 
-Elf64_Shdr *retrieve_symbol_table(Elf64_Ehdr *ehdr) {
-  // Maybe encapsulate this into a structure that contains all the information needed (such as nb. of symbol)
-  return ((Elf64_Shdr *) ((char *) ehdr + ehdr->e_shoff));
-}
+elf_file_t *init_efile(void) {
+  elf_file_t *efile;
 
-Elf64_Phdr *retrieve_program_table(Elf64_Ehdr *ehdr) {
-  // Maybe encapsulate this into a structure that contains all the information needed (such as nb. of segment)
-  return ((Elf64_Phdr *) ((char *) ehdr + ehdr->e_phoff));
+  if ((efile = malloc(sizeof(elf_file_t))) == NULL)
+    return (NULL);
+  efile->file = NULL;
+  efile->ehdr = NULL;
+  efile->phdr = NULL;
+  efile->shdr = NULL;
+  efile->section_content = NULL;
+  return (efile);
 }
 
 int main(int ac, char **av) {
-  Elf64_Ehdr *ehdr;
-  Elf64_Shdr *shdr;
-  Elf64_Phdr *phdr;
-  Elf64_Shdr *sh_strtab;
+  elf_file_t *efile = init_efile();
 
-  ehdr = (Elf64_Ehdr *) retrieve_elf_file("test");
-  shdr = retrieve_symbol_table(ehdr);
-  phdr = retrieve_program_table(ehdr);
-
-  sh_strtab = &shdr[ehdr->e_shstrndx];
-
-  const char *const sh_strtab_p = (char *) ((char *) ehdr + sh_strtab->sh_offset);
-
-  printf("Entry: 0x%08lx\n", ehdr->e_entry);
-
-  printf("\nSections:\n");
-  for (int i = 0; i < ehdr->e_shnum; i++) {
-    if (shdr[i].sh_size == 0)
-      continue;
-    printf("0x%08lx-0x%08lx %s\n", shdr[i].sh_offset, shdr[i].sh_offset + shdr[i].sh_size, (sh_strtab_p + shdr[i].sh_name));
-  }
+  efile->file = retrieve_elf_file("test");
+  extract_and_copy_headers(efile);
   return 0;
 }
