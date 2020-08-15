@@ -43,5 +43,7 @@ int main(int ac, char **av) {
   extract_and_copy_headers(efile);
 
   dump(efile, "testpacked");
+  // Just a debug printf
+  printf("STUB: %d and stubsize: %ld\n", stub(), stub_size);
   return (0);
 }

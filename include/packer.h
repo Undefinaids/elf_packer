@@ -14,6 +14,9 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
+extern int stub();
+extern uint64_t stub_size;
+
 typedef struct  elf_file_s {
   void          *file;
   Elf64_Ehdr    *ehdr;
