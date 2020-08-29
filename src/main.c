@@ -42,8 +42,7 @@ int main(int ac, char **av) {
   efile->file = retrieve_elf_file("test");
   extract_and_copy_headers(efile);
 
+  add_new_section(efile);
   dump(efile, "testpacked");
-  // Just a debug printf
-  printf("STUB: %d and stubsize: %ld\n", stub(), stub_size);
   return (0);
 }

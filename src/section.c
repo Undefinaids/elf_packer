@@ -10,8 +10,8 @@ static Elf64_Shdr *init_section(void) {
   if ((section = malloc(sizeof(Elf64_Shdr))) == NULL)
     return (NULL);
   section->sh_name = 0;
-  section->sh_type = SHT_NOBITS;
-  section->sh_flags = 0;
+  section->sh_type = SHT_PROGBITS;
+  section->sh_flags = SHF_EXECINSTR | SHF_ALLOC;
   section->sh_addr = 0;
   section->sh_offset = 0;
   section->sh_size = 0;
@@ -27,12 +27,14 @@ Elf64_Shdr *add_new_section(elf_file_t *efile) {
 
   if ((new_section = init_section()) == NULL)
     return (NULL);
-  if (realloc(efile->shdr, (efile->ehdr->e_shnum + 1) * sizeof(Elf64_Shdr)) == NULL)
+  if ((efile->shdr = realloc(efile->shdr, (efile->ehdr->e_shnum + 1) * sizeof(Elf64_Shdr))) == NULL)
     return (NULL);
+  if ((efile->section_content = realloc(efile->section_content, (efile->ehdr->e_shnum + 1) * sizeof(uint8_t *))) == NULL)
+	return (NULL);
 
-  // PROBLEM WITH THIS LINE (FIX IT)
-  my_memcpy(efile->shdr + (efile->ehdr->e_shnum * sizeof(Elf64_Shdr)), new_section, sizeof(Elf64_Shdr));
-  //free(new_section);
+  efile->section_content[efile->ehdr->e_shnum] = 0;
+  my_memcpy((uint8_t *) efile->shdr + (efile->ehdr->e_shnum * sizeof(Elf64_Shdr)), new_section, sizeof(Elf64_Shdr));
+  free(new_section);
   efile->ehdr->e_shnum += 1;
   return (efile->shdr + (efile->ehdr->e_shnum - 1) * sizeof(Elf64_Shdr));
 }
