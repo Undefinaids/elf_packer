@@ -6,9 +6,8 @@ global stub_size:data
 stub_size dq end - stub
 
 stub:
-	push rbp
-	mov rbp, rsp
-	mov rax, 10
-	leave
+	mov	rdi, 1
+	mov rax, 60
+	syscall
 	ret
 end:

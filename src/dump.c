@@ -26,7 +26,7 @@ int dump(elf_file_t *efile, const char *name) {
   for (size_t i = 0; i < efile->ehdr->e_shnum; ++i) {
     if (efile->shdr[i].sh_type != SHT_NOBITS) {
       if (wchar < efile->shdr[i].sh_offset)
-	    wchar += padding(fd,efile->shdr[i].sh_offset - wchar);
+        wchar += padding(fd, efile->shdr[i].sh_offset - wchar);
       wchar += write(fd, efile->section_content[i], efile->shdr[i].sh_size);
     }
   }

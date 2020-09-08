@@ -7,5 +7,8 @@ Etapes de réalisation du projet:
 - ~~Ajouter une nouvelle section~~
 - Chiffrer la section .text (voir plus, à réfléchir)
 - Réaliser le code assembleur permettant de déchiffrer
-- L'intégrer dans le fichier
-- Changer le point d'entrée
+- ~~L'intégrer dans le fichier~~
+- ~~Changer le point d'entrée~~
+
+
+TODO: nettoyer le code, réparer la table de symbole (trouver pourquoi elle est cassée)

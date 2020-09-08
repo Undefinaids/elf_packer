@@ -43,6 +43,8 @@ int main(int ac, char **av) {
   extract_and_copy_headers(efile);
 
   add_new_section(efile);
+
+  printf("Stub size %ld\n", stub_size);
   dump(efile, "testpacked");
   return (0);
 }
